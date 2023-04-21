@@ -7,9 +7,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Server implements Runnable{
     private BlockingQueue<Task> tasks;
     private AtomicInteger waitingPeriod;
+    int id;
     Thread t;
 
-    public Server(int maxServers){
+    public Server(int maxServers, int id){
+        this.id = id;
         tasks = new ArrayBlockingQueue<>(maxServers);
         waitingPeriod = new AtomicInteger(0);
         t = new Thread(this);
@@ -32,7 +34,7 @@ public class Server implements Runnable{
             if(remainingTime == 0)
             {
                 remainingTime = tasks.poll().getServiceTime();
-                System.out.println("one more task with remaining Time: " + remainingTime);
+                System.out.println("Server:" + id + " task with remaining Time: " + remainingTime);
             }
             try {
                 t.sleep(500);

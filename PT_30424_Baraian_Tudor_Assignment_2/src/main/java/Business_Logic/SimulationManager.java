@@ -15,6 +15,7 @@ public class SimulationManager implements Runnable{
     public int minProcessingTime = 2;
     public int numberOfServers = 3;
     public int numberOfClients = 100;
+    public int maxNoOfClients =5;
 
     public SelectionPolicy selectionPolicy = SelectionPolicy.SHORTEST_TIME;
     private final Scheduler scheduler;
@@ -22,9 +23,9 @@ public class SimulationManager implements Runnable{
     private List<Task> tasks;
 
     public SimulationManager(){
-        scheduler = new Scheduler(numberOfServers,5);
+        scheduler = new Scheduler(numberOfServers,maxNoOfClients);
         scheduler.changeStrategy(selectionPolicy);
-        //TODO initialize frame of display
+        frame = new SimulationFrame(numberOfServers,maxNoOfClients);
         generateNRandomTasks(numberOfClients);
     }
 
