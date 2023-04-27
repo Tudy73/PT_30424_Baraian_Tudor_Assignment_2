@@ -31,6 +31,10 @@ public class SimulationFrame {
     private JTextArea counterText;
     public Scheduler scheduler;
     private File file;
+    private JLabel minArrivalTimeLabel;
+    private JTextField minArrivalTimeText;
+    private JLabel maxArrivalTimeLabel;
+    private JTextField maxArrivalTimeText;
 
     public SimulationFrame() {
         file = new File("text.txt");
@@ -48,7 +52,7 @@ public class SimulationFrame {
         initFrame.setTitle("init");
         initFrame.pack();
         initFrame.setVisible(true);
-        initFrame.setSize(400, 400);
+        initFrame.setSize(450, 450);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -121,6 +125,26 @@ public class SimulationFrame {
         mainPanel.add(maxNoOfClientsText, gbc);
 
         gbc.gridx = 0;
+        gbc.gridy++;
+        minArrivalTimeLabel = new JLabel("Min Arrival Time:");
+        mainPanel.add(minArrivalTimeLabel, gbc);
+
+        gbc.gridx++;
+        minArrivalTimeText = new JTextField(10);
+        minArrivalTimeText.setText("1");
+        mainPanel.add(minArrivalTimeText, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy++;
+        maxArrivalTimeLabel = new JLabel("Max Arrival Time:");
+        mainPanel.add(maxArrivalTimeLabel, gbc);
+
+        gbc.gridx++;
+        maxArrivalTimeText = new JTextField(10);
+        maxArrivalTimeText.setText("49");
+        mainPanel.add(maxArrivalTimeText, gbc);
+
+        gbc.gridx = 0;
         gbc.gridy += 2;
         JButton start = new JButton("Start");
         mainPanel.add(start, gbc);
@@ -131,6 +155,8 @@ public class SimulationFrame {
             SimulationManager.numberOfServers = Integer.parseInt(numberOfServersText.getText());
             SimulationManager.numberOfClients = Integer.parseInt(numberOfClientsText.getText());
             SimulationManager.maxNoOfClients = Integer.parseInt(maxNoOfClientsText.getText());
+            SimulationManager.minArrivalTime = Integer.parseInt(minArrivalTimeText.getText());
+            SimulationManager.maxArrivalTime = Integer.parseInt(maxArrivalTimeText.getText());
             scheduler = new Scheduler(SimulationManager.numberOfServers, SimulationManager.numberOfClients);
             serverNo = SimulationManager.numberOfServers;
             taskNo = SimulationManager.maxNoOfClients;
@@ -190,13 +216,13 @@ public class SimulationFrame {
 
     private void instantiateTasks() {
         int taskArea = Math.min((HEIGHT - topSpace) / taskNo, serverArea / 2);
-        int taskSize = (taskArea / 5) * 3;
+        int taskSize = taskArea*2/3;
         tasks = new ArrayList<>();
         for (int i = 0; i < serverNo; i++) {
             List<JTextArea> server = new ArrayList<>();
             for (int j = 0; j < taskNo; j++) {
                 JTextArea newTask = new JTextArea();
-                newTask.setBounds(i * serverArea + serverArea / 4 + serverArea / 6, j * taskArea + topSpace, taskSize, taskSize);
+                newTask.setBounds(i * serverArea + serverArea / 4 + (serverArea/2-taskSize)/2, j * taskArea + topSpace, taskSize, taskSize);
                 newTask.setBackground(Color.white);
                 newTask.setFont(newTask.getFont().deriveFont(12f));
                 newTask.setAlignmentX(JTextArea.CENTER_ALIGNMENT);
@@ -232,6 +258,7 @@ public class SimulationFrame {
             int no = server.getNoTasks();
             if(no==0){
                 write("closed");
+                tasks.get(j).get(0).setVisible(false);
                 continue;
             }
             List<JTextArea> pool = tasks.get(j);

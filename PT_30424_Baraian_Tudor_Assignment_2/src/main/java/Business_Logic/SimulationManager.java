@@ -24,6 +24,8 @@ public class SimulationManager implements Runnable{
     public static int currentTime;
     public static AtomicInteger totalWaitingTime,totalServiceTime = new AtomicInteger(0);
     public static int peakHour,numberOfClientsPeakHour=0;
+    public static int minArrivalTime=1;
+    public static int maxArrivalTime=49;
 
     public SelectionPolicy selectionPolicy = SelectionPolicy.SHORTEST_TIME;
     private final Scheduler scheduler;
@@ -43,7 +45,7 @@ public class SimulationManager implements Runnable{
     public void generateNRandomTasks(int n){
         tasks=new ArrayList<>();
         for(int i=1;i<=n;++i){
-            tasks.add(new Task(i, (int) (Math.random() * (timeLimit)),
+            tasks.add(new Task(i, (int) (Math.random() * (maxArrivalTime - minArrivalTime +1)+minArrivalTime),
                     (int) (Math.random() * (maxProcessingTime - minProcessingTime + 1)) + minProcessingTime));
         }
         tasks.sort(new TaskComparator());
