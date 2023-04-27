@@ -1,7 +1,5 @@
 package Model;
 
-import java.security.KeyPair;
-
 public class Task {
     private int id;
     private int arrivalTime;
@@ -19,12 +17,15 @@ public class Task {
         return serviceTime;
     }
 
+    public void decrementServiceTime(){serviceTime--;}
+
+    public int getId(){return id;}
+
     @Override
     public String toString() {
-        return "Task{" +
-                "id=" + id +
-                ", arrivalTime=" + arrivalTime +
-                ", serviceTime=" + serviceTime +
+        return "{" + id +
+                "," + arrivalTime +
+                "," + serviceTime +
                 '}';
     }
 }
